@@ -4,14 +4,31 @@ import json
 from dataclasses import asdict
 
 
-def store_new_user(data):
+def exist(email):
+    try:
+        f = open('data.txt', 'r')
+    except FileNotFoundError:
+        print('file not found, please retry')
+        return
+
+    temp = f.readlines()
+    for i in temp:
+        if email in i:
+            print('email already taken please use new email')
+            return True
+    return False
+
+
+def store_new_user(data, email):
     try:
         f = open('data.txt', 'a')
-        f.write(data + '\n')
-        f.close()
-        print("Signed up successfully!")
     except FileNotFoundError:
         print('File not found, please retry signing up')
+        return
+
+    f.write(data + '\n')
+    f.close()
+    print("Signed up successfully!")
 
 
 def bmi_calculator(height, weight):
@@ -78,12 +95,16 @@ def signup():
             print('please enter only mentioned characters')
             continue
 
+    if exist(email):
+        return
+
     user = User(name, email, height, weight, age, gender)
     bmi = bmi_calculator(height, weight)
     data = asdict(user)
     data['bmi'] = bmi
+    data['calories'] = []
     data = json.dumps(data)
-    store_new_user(data)
+    store_new_user(data, email)
 
 
 def add_data():
