@@ -27,6 +27,40 @@ def add_calories(calories, email):
     f.close()
 
 
+def plot_graph(email):
+    try:
+        with open('data.txt', 'r', encoding='utf-8') as f:
+            temp = f.readlines()
+    except FileNotFoundError:
+        print('file not found')
+    f.close()
+    data = None
+    for i in range(len(temp)):
+        if email in temp[i]:
+            user = json.loads(temp[i])
+            if user['calories']:
+                data = user['calories']
+                break
+            else:
+                print('No data to plot')
+                return
+    # y = data
+    # x = list(range(1, len(data)+1))
+    # plt.xlabel('days')
+    # plt.ylabel('calories consumed')
+    # plt.plot(x, y)
+    # plt.show()
+
+
+def validate_email(email):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    email = email.strip()
+    if re.fullmatch(regex, email):
+        return True
+    else:
+        return False
+
+
 def exist(email):
     try:
         f = open('data.txt', 'r')
@@ -37,14 +71,13 @@ def exist(email):
     temp = f.readlines()
     for i in temp:
         if email in i:
-            print('email already taken please use new email')
             f.close()
             return True
     f.close()
     return False
 
 
-def store_new_user(data, email):
+def store_new_user(data):
     try:
         f = open('data.txt', 'a')
     except FileNotFoundError:
@@ -82,14 +115,12 @@ def signup():
             print('name should only contain letters and spaces')
             continue
 
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     while True:
         email = input('enter your email ')
-        email = email.strip()
-        if re.fullmatch(regex, email):
+        if validate_email(email):
             break
         else:
-            print('please enter valid email address')
+            print('please enter valid email!')
 
     while True:
         try:
@@ -121,6 +152,7 @@ def signup():
             continue
 
     if exist(email):
+        print('email already taken! use new email')
         return
 
     user = User(name, email, height, weight, age, gender)
@@ -129,35 +161,22 @@ def signup():
     data['bmi'] = bmi
     data['calories'] = []
     data = json.dumps(data)
-    store_new_user(data, email)
+    store_new_user(data)
 
 
 def add_data():
-    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     while True:
         email = input('enter your email ')
-        email = email.strip()
-        if re.fullmatch(regex, email):
+        if validate_email(email):
             break
         else:
             print('please enter valid email address')
+            continue
 
-    try:
-        f = open('data.txt', 'r')
-    except FileNotFoundError:
-        print('Could not find file, retry')
-        return
-
-    flag = False
-    temp = f.readlines()
-    for i in temp:
-        if email in i:
-            flag = True
-            break
-    f.close()
-    if not flag:
+    if not exist(email):
         print('User not found, please signup')
         return
+
     while True:
         try:
             morning = float(input('enter the amount of calories consumed in morning '))
@@ -171,7 +190,20 @@ def add_data():
 
     total_calories = morning + afternoon + night
     add_calories(total_calories, email)
+    return
 
 
 def display_data():
-    pass
+    while True:
+        email = input('enter your email ')
+        if validate_email(email):
+            break
+        else:
+            print('please enter valid email address')
+            continue
+
+    if not exist(email):
+        print('user does not exist please signup')
+        return
+
+    plot_graph(email)

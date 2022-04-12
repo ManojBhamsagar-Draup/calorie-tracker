@@ -1,1 +1,1 @@
-{"name": "manoj", "email": "manoj@gmail.com", "height": 1.56, "weight": 59.0, "age": 22, "gender": "m", "bmi": 24.24, "calories": [750.0, 949.0]}
+{"name": "manoj", "email": "manoj@gmail.com", "height": 1.56, "weight": 59.0, "age": 22, "gender": "m", "bmi": 24.24, "calories": [750.0, 949.0, 1600.0, 1500.0, 1800.0, 2000.0]}

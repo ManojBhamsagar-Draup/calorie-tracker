@@ -11,6 +11,8 @@ while True:
     except TypeError:
         print('looks like you did not enter an integer')
         continue
+    except ValueError:
+        print('Invalid key entered')
     else:
         if choice == 1:
             signup()
@@ -20,4 +22,6 @@ while True:
             display_data()
         elif choice == 4:
             break
+        else:
+            print('invalid number!')
 print('Bye!')
