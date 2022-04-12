@@ -4,6 +4,29 @@ import json
 from dataclasses import asdict
 
 
+def add_calories(calories, email):
+    try:
+        with open('data.txt', 'r', encoding='utf-8') as f:
+            temp = f.readlines()
+    except FileNotFoundError:
+        print('file not found')
+    f.close()
+
+    for i in range(len(temp)):
+        if email in temp[i]:
+            user = json.loads(temp[i])
+            user['calories'].append(calories)
+            temp[i] = json.dumps(user)
+            temp[i] += '\n'
+    try:
+        with open('data.txt', 'w', encoding='utf-8') as file:
+            file.writelines(temp)
+    except FileNotFoundError:
+        print('could not add data try again')
+    print('Data saved successfully')
+    f.close()
+
+
 def exist(email):
     try:
         f = open('data.txt', 'r')
@@ -15,7 +38,9 @@ def exist(email):
     for i in temp:
         if email in i:
             print('email already taken please use new email')
+            f.close()
             return True
+    f.close()
     return False
 
 
@@ -108,7 +133,44 @@ def signup():
 
 
 def add_data():
-    pass
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    while True:
+        email = input('enter your email ')
+        email = email.strip()
+        if re.fullmatch(regex, email):
+            break
+        else:
+            print('please enter valid email address')
+
+    try:
+        f = open('data.txt', 'r')
+    except FileNotFoundError:
+        print('Could not find file, retry')
+        return
+
+    flag = False
+    temp = f.readlines()
+    for i in temp:
+        if email in i:
+            flag = True
+            break
+    f.close()
+    if not flag:
+        print('User not found, please signup')
+        return
+    while True:
+        try:
+            morning = float(input('enter the amount of calories consumed in morning '))
+            afternoon = float(input('enter the amount of calories consumed in afternoon '))
+            night = float(input('enter the amount of calories consumed in night '))
+        except ValueError:
+            print('Calories should be in number')
+            continue
+        else:
+            break
+
+    total_calories = morning + afternoon + night
+    add_calories(total_calories, email)
 
 
 def display_data():
