@@ -1,10 +1,39 @@
 from user import User
 import re
+import json
+from dataclasses import asdict
+
+
+def store_new_user(data):
+    try:
+        f = open('data.txt', 'a')
+        f.write(data + '\n')
+        f.close()
+        print("Signed up successfully!")
+    except FileNotFoundError:
+        print('File not found, please retry signing up')
+
+
+def bmi_calculator(height, weight):
+    bmi = round((weight / (height ** 2)), 2)
+    print('your BMI is {}'.format(bmi))
+
+    if bmi <= 18.5:
+        print("Your physical health status is underweight, try to consume more calories and maintain good diet.")
+    elif 18.5 < bmi <= 24.9:
+        print("Your physical health status is normal and Healthy weight, Good going!")
+    elif 25.0 < bmi <= 29.9:
+        print("Your physical health status is overweight, try to do daily exercise and maintain good diet.")
+    else:
+        print("Your physical health status is Obese, consume less calories and avoid junk food")
+
+    return bmi
 
 
 def signup():
     while True:
         name = input('enter your name ')
+        name = name.strip()
         if re.match(r'[a-zA-Z]+$', name):
             break
         else:
@@ -14,6 +43,7 @@ def signup():
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     while True:
         email = input('enter your email ')
+        email = email.strip()
         if re.fullmatch(regex, email):
             break
         else:
@@ -23,8 +53,8 @@ def signup():
         try:
             print('enter height in meters and weight in kgs ')
             height, weight = [float(i) for i in input().split()]
-        except TypeError:
-            print('height and weight should be numbers')
+        except ValueError:
+            print('please enter height and weight in numbers with a space between them')
             continue
         else:
             break
@@ -49,22 +79,11 @@ def signup():
             continue
 
     user = User(name, email, height, weight, age, gender)
-    print('user {} created successfully'.format(user.name))
-    bmi_calculator(height, weight)
-
-
-def bmi_calculator(height, weight):
-    bmi = weight/(height**2)
-    print('your BMI is {}'.format(bmi))
-
-    if bmi <= 18.5:
-        print("Your physical health status is underweight, try to consume more calories and maintain good diet.")
-    elif 18.5 < bmi <= 24.9:
-        print("Your physical health status is normal and Healthy weight, Good going!")
-    elif 25.0 < bmi <= 29.9:
-        print("Your physical health status is overweight, try to do daily exercise and maintain good diet.")
-    else:
-        print("Your physical health status is Obese, consume less calories and avoid junk food")
+    bmi = bmi_calculator(height, weight)
+    data = asdict(user)
+    data['bmi'] = bmi
+    data = json.dumps(data)
+    store_new_user(data)
 
 
 def add_data():
