@@ -1,4 +1,5 @@
 {"name": "manoj", "email": "manoj@gmail.com", "height": 1.56, "weight": 59.0, "age": 22, "gender": "m", "bmi": 24.24, "calories": [750.0, 949.0, 1600.0, 1500.0, 1800.0, 2000.0]}
 {"name": "nithin", "email": "nithin@gmail.com", "height": 1.56, "weight": 60.0, "age": "m", "gender": 22, "bmi": 24.65, "calories": [2250.0]}
-
 {"name": "prajwal", "email": "prajwal@gmail.com", "height": 1.8, "weight": 67.0, "age": "m", "gender": 22, "bmi": 20.68, "calories": []}
+{"name": "ajay", "email": "ajay@gmail.com", "height": 1.6, "weight": 70.0, "age": "m", "gender": 22, "bmi": 27.34, "calories": []}
+{"name": "karthik", "email": "kar@gmail.com", "height": 1.6, "weight": 65.0, "age": 22, "gender": "m", "bmi": 25.39, "calories": [2270.0]}

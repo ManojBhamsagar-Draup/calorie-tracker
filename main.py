@@ -1,5 +1,6 @@
-from app_functions import signup, add_calories, plot_graph
 from utility_functions import exist, validate_email
+from app_functions import AddCalories, PlotGraph
+from user import User
 import re
 
 
@@ -63,8 +64,13 @@ while True:
                 else:
                     print('please enter only mentioned characters')
                     continue
-
-            signup(name, email, height, weight, gender, age)
+            user = User(name, email, height, weight, age, gender, 0.0, [])
+            success = user.signup(user)
+            if success:
+                print('Hi {}, signed up successfully'.format(user.name))
+                user.bmi_outputter()
+            else:
+                print('File not found, please retry signing up')
 
         elif choice == 2:
             while True:
@@ -91,7 +97,8 @@ while True:
                         break
 
                 total_calories = morning + afternoon + night + extra
-                add_calories(total_calories, email)
+                add = AddCalories(total_calories, email)
+                add.add_calories()
 
         elif choice == 3:
             while True:
@@ -105,7 +112,8 @@ while True:
             if not exist(email):
                 print('user does not exist please signup')
             else:
-                plot_graph(email)
+                graph = PlotGraph(email)
+                graph.plot_graph()
 
         elif choice == 4:
             break
