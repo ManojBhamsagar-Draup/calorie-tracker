@@ -1,11 +1,11 @@
 from utility_functions import exist, validate_email
-from app_functions import AddCalories, PlotGraph
+from app_functions import AddCalories, PlotGraph, display_user_data, delete_user, set_new_password
 from user import User
 import re
 
 
 while True:
-    print('1 signup\t 2 add data\t 3 display\t 4 quit')
+    print('1 signup\t 2 add data\t 3 display\t 4 admin login\t 5 quit')
 
     try:
         choice = int(input())
@@ -28,7 +28,7 @@ while True:
                 email = input('enter your email ')
                 email = email.strip()
                 if validate_email(email):
-                    if exist(email):
+                    if exist(email, 'data.txt'):
                         print('email already taken please try with another email')
                         continue
                     else:
@@ -81,7 +81,7 @@ while True:
                 else:
                     print('please enter valid email address')
                     continue
-            if not exist(email):
+            if not exist(email, 'data.txt'):
                 print('User not found, please signup')
             else:
                 while True:
@@ -109,14 +109,73 @@ while True:
                 else:
                     print('please enter valid email address')
                     continue
-            if not exist(email):
+            if not exist(email, 'data.txt'):
                 print('user does not exist please signup')
             else:
                 graph = PlotGraph(email)
                 graph.plot_graph()
 
         elif choice == 4:
+            while True:
+                email = input('enter your email ')
+                email = email.strip()
+                if validate_email(email):
+                    break
+                else:
+                    print('enter valid email address')
+                    continue
+            if not exist(email, 'admin.txt'):
+                print('email address is wrong')
+                continue
+            else:
+                while True:
+                    password = input('enter password ').strip()
+                    if not exist(password, 'admin.txt'):
+                        print("password doesn't match")
+                        continue
+                    else:
+                        while True:
+                            print("1 check user's data\t 2 delete user\t 3 change password\t 4 logout")
+                            try:
+                                admin_choice = int(input())
+                            except TypeError:
+                                print('looks like you did not enter an integer')
+                                continue
+                            except ValueError:
+                                print('Invalid key entered')
+                            else:
+                                if admin_choice == 1:
+                                    display_user_data('data.txt')
+                                elif admin_choice == 2:
+                                    while True:
+                                        email = input('enter email of the user you want to delete ').strip()
+                                        if not validate_email(email):
+                                            print('enter valid email address')
+                                        else:
+                                            break
+                                    if exist(email, 'data.txt'):
+                                        if delete_user(email, 'data.txt'):
+                                            print('user deleted successfully')
+                                        else:
+                                            print('unable to delete user data')
+                                    else:
+                                        print("user with the given email doesn't exists")
+
+                                elif admin_choice == 3:
+                                    new_password = input('enter new password ').strip()
+                                    if set_new_password(new_password, 'admin.txt'):
+                                        print("password set successfully")
+                                    else:
+                                        print("unable to set new password, try again")
+                                elif admin_choice == 4:
+                                    break
+                                else:
+                                    print('invalid choice')
+                        break
+
+        elif choice == 5:
             break
+
         else:
             print('invalid choice!')
 print('Bye!')

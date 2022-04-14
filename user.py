@@ -14,10 +14,13 @@ class User:
     calories: list
 
     def __post_init__(self):
+        """calculates bmi whenever User is instantiated."""
         self.bmi = round((self.weight / (self.height ** 2)), 2)
         self.calories = []
 
-    def signup(self, user):
+    @staticmethod
+    def signup(user):
+        """writes user data to database(data.txt)"""
         data = asdict(user)
         data = json.dumps(data)
 
@@ -31,6 +34,7 @@ class User:
         return True
 
     def bmi_outputter(self):
+        """prints bmi of user"""
         if self.bmi <= 18.5:
             print("Your physical health status is underweight, try to consume more calories and maintain good diet.")
         elif 18.5 < self.bmi <= 24.9:
@@ -39,8 +43,3 @@ class User:
             print("Your physical health status is overweight, try to do daily exercise and maintain good diet.")
         else:
             print("Your physical health status is Obese, consume less calories and avoid junk food")
-
-
-
-
-
